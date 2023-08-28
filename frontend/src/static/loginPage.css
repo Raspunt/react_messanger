@@ -1,0 +1,155 @@
+
+html,body {
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    height: 100%;
+}
+
+:root {
+    --formWidth:400px;
+    --white: #ffffff;
+  }
+
+
+.MainContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.LoginBox {
+  padding: 10px 10px;
+  width:500px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 1rem;
+
+}
+
+.messageBox{
+  background-color:#f7a7a3;
+  margin:15px;
+  padding:10px;
+  border-radius:1rem;
+}
+
+.messageBox p {
+  font-weight: bold;
+}
+
+
+.ConfirmBtn {
+    background-color: #2d43c0;
+    border: 0 solid #E5E7EB;
+    box-sizing: border-box;
+    color: #000000;
+    display: flex;
+    font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    line-height: 1.75rem;
+    padding: .75rem 1.65rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none #000000 solid;
+    text-decoration-thickness: auto;
+    width: 100%;
+    max-width: var(--formWidth);
+    position: relative;
+    cursor: pointer;
+    transform: rotate(-2deg);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+
+    margin: 40px;
+
+    
+}
+
+.ConfirmBtn:focus {
+  outline: 0;
+}
+
+.ConfirmBtn:after {
+  content: '';
+  position: absolute;
+  border: 1px solid #000000;
+  bottom: 4px;
+  left: 4px;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+}
+
+.ConfirmBtn:hover:after {
+  bottom: 2px;
+  left: 2px;
+}
+
+@media (min-width: 768px) {
+  .ConfirmBtn {
+    padding: .75rem 3rem;
+    font-size: 1.25rem;
+  }
+}
+
+
+
+
+
+
+.formBox {
+    /* --width-of-input: 200px; */
+    --border-height: 1px;
+    --border-before-color: rgba(221, 221, 221, 0.39);
+    --border-after-color: #5891ff;
+    --input-hovered-color: #4985e01f;
+    position: relative;
+    width: var(--width-of-input);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* styling of Input */
+.formBox input {
+    color: black;
+    font-size: 0.9rem;
+    background-color: transparent;
+    width: 100%;
+    box-sizing: border-box;
+    padding-inline: 0.5em;
+    padding-block: 0.7em;
+    border: none;
+    border-bottom: var(--border-height) solid var(--border-before-color);
+}
+
+.formBox:hover ~ .input-border{
+  visibility: hidden;
+}
+
+
+/* styling of animated border
+.input-border {
+  position: absolute;
+  top: 0;
+  left:10px;
+  transition: background-color 0.5s ease;
+  color: rgba(0, 0, 0, 0.3)
+} */
+
+
+
+   
+.login_input:focus {
+    outline: none;
+}
+.login_input:focus ~ .input-border {
+    width: 100%;
+}
