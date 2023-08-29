@@ -113,6 +113,7 @@ html,body {
 
 .chat_background {
     height: 90%;
+    
     background-color: white;
     border-radius:2rem;
     margin: 20px;

@@ -31,10 +31,11 @@ router.delete('/user/:user_id',userComponent.DeleteUser);
 
 router.get('/chats',chatComponent.GetAllChats);
 router.get('/chat/:chat_id',chatComponent.getChatById);
-router.post('/addUserToChat',chatComponent.addUserToChat);
 router.post('/chat/Create',chatComponent.CreateChat);
+router.post('/chat/addUser',chatComponent.addMemberToChat);
+router.post("/chat/addMessage",chatComponent.addMessageToChat);
 
-router.get("/collections/all",adminComponent.GetAllCollection)
+router.get("/collections/all",adminComponent.GetAllCollection);
 
 
 

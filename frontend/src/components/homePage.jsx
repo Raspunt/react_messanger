@@ -117,6 +117,8 @@ class  HomeComponent extends Component {
                                 <div className="chat_padding">
 
                                     {this.state.is_open_chat &&
+
+                                        
                                         <h1>
                                             {this.state.selected_chat}
                                         </h1>

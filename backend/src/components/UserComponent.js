@@ -1,125 +1,102 @@
-import bcrypt  from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
-
-
-import User from "../models/User.js"
+import User from "../models/User.js";
 
 console.log("user component init");
 
-class UserComponent{
-
-
-    async  GetAllUsers(req,res){
+class UserComponent {
+    async GetAllUsers(req, res) {
         try {
-            const users = await User.find()
+            const users = await User.find();
             res.json(users);
         } catch (error) {
             res.status(500).json({ error: 'Error fetching users' });
         }
     }
 
-    async CreateUser (req,res){
-
-        console.log(req.body);
-        res.setHeader('Content-Type', 'application/json');
-
- 
-        let user = new User(req.body);
+    async CreateUser(req, res) {
         try {
+            const user = new User(req.body);
             await user.save();
-            res.json("user has been created");
-        } catch (err) {
-            // console.log(err.message.split(","))
-            res.json(err.message.split(","));
+            res.json("User has been created");
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while creating the user' });
         }
-        
-        
-        
-        
-
     }
 
-    async getUserById(req,res){
+    async getUserById(req, res) {
+        try {
+            const user_id = req.params.user_id;
+            const user = await User.findById(user_id);
 
-        const user_id = req.params.user_id
-        const user = await User.findById(user_id);
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
 
-        res.json(user);
-
-
+            res.json(user);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while fetching the user' });
+        }
     }
 
-    async DeleteUser(req,res) {
-
-        const user_id = req.params.user_id
-        await User.findByIdAndDelete(user_id);
-        res.send("user has been deleted");
+    async DeleteUser(req, res) {
+        try {
+            const user_id = req.params.user_id;
+            await User.findByIdAndDelete(user_id);
+            res.send("User has been deleted");
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while deleting the user' });
+        }
     }
 
+    async Login(req, res) {
+        try {
+            const formPassword = req.body.password;
+            const mail = req.body.email;
 
-    async Login(req,res){
+            const user = await User.findOne({ email: new RegExp('^' + mail + '$', "i") });
 
+            if (!user) {
+                return res.status(404).json({ error: "Email not found" });
+            }
 
-        const formPassword = req.body.password;
-        const mail = req.body.email;
-
-        const user = await User.findOne({email: new RegExp('^'+mail+'$', "i")})
-        if (user != null){
             const result = await bcrypt.compare(formPassword, user.password);
 
-            if (result == false){
-                res.json({
-                     status: false,
-                     message:"wrong_password"
-                })
-            }
-            else
-            {
-                
-                const token = jwt.sign(
-                    {
-                        userId: user._id,
-                        // userEmail: user.email,
-                    },process.env.PRIVATE_KEY_JWT,
-                    { expiresIn: "24h" }
-                )
-
-                res.status(200)
-                res.json({
-                    status: true,
-                    message:"successful_login",
-                    token:token
-                })
-
-
+            if (!result) {
+                return res.status(401).json({ error: "Wrong password" });
             }
 
-        }else {
-            res.status(404)
-            res.json({
-                status: false,
-                message:"Email_not_found"
-           })
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                },
+                process.env.PRIVATE_KEY_JWT,
+                { expiresIn: "24h" }
+            );
+
+            res.status(200).json({
+                message: "Successful login",
+                token: token
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred during login' });
         }
     }
 
-    async CheckToken(req,res){
-
-        // const decoded = jwt.verify(req.cookies.token, process.env.PRIVATE_KEY_JWT);
-        // console.log(decoded);
-        res.json(req)
+    async CheckToken(req, res) {
+        try {
+            // const decoded = jwt.verify(req.cookies.token, process.env.PRIVATE_KEY_JWT);
+            // console.log(decoded);
+            res.json(req);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while checking the token' });
+        }
     }
-
-
-
-
-
-
-
-
-
 }
-
-
 
 export default UserComponent;

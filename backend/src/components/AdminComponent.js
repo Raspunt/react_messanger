@@ -1,7 +1,6 @@
 import Chat from "../models/Chat.js";
 import User from "../models/User.js";
 
-console.log("admin component init");
 
 class AdminComponent{
     
