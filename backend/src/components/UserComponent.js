@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 import User from "../models/User.js";
 
-console.log("user component init");
 
 class UserComponent {
     async GetAllUsers(req, res) {
@@ -41,6 +40,43 @@ class UserComponent {
         }
     }
 
+    async CheckAuthentication(req, res) {
+
+        try {
+            let user_token = req.body.token;
+            let user_id = jwt.verify(user_token, process.env.PRIVATE_KEY_JWT)["userId"]
+
+            const user = await User.findById(user_id).select("-password").select("-role").select("-_id");
+
+            if (!user) {
+                return res.status(401).json({
+                    status:false,
+                    error: "auntifcation error"
+                });
+            }
+
+            res.status(200).json({
+                status:true,
+                user:user,
+            });
+
+        }catch (error){
+
+            if (error instanceof jwt.JsonWebTokenError){
+                return res.status(401).json({
+                    status:false,
+                    error: "auntifcation error X2"
+                });
+            }else {
+                return res.status(500).json({
+                    status:false,
+                    error: "server error"
+                });
+            }
+
+        }
+    }
+
     async DeleteUser(req, res) {
         try {
             const user_id = req.params.user_id;
@@ -57,16 +93,23 @@ class UserComponent {
             const formPassword = req.body.password;
             const mail = req.body.email;
 
+
             const user = await User.findOne({ email: new RegExp('^' + mail + '$', "i") });
 
             if (!user) {
-                return res.status(404).json({ error: "Email not found" });
+                return res.status(404).json({
+                    status: false,
+                    message: "email_not_found"
+                });
             }
 
             const result = await bcrypt.compare(formPassword, user.password);
 
             if (!result) {
-                return res.status(401).json({ error: "Wrong password" });
+                return res.status(401).json({
+                    status: false,
+                    message: "wrong_password"
+                });
             }
 
             const token = jwt.sign(
@@ -78,25 +121,20 @@ class UserComponent {
             );
 
             res.status(200).json({
-                message: "Successful login",
+                status: true,
+                message: "successful_login",
                 token: token
             });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'An error occurred during login' });
+            res.status(500).json({
+                status: false,
+                message: "error_during_login",
+            });
         }
     }
 
-    async CheckToken(req, res) {
-        try {
-            // const decoded = jwt.verify(req.cookies.token, process.env.PRIVATE_KEY_JWT);
-            // console.log(decoded);
-            res.json(req);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'An error occurred while checking the token' });
-        }
-    }
+
 }
 
 export default UserComponent;

@@ -4,11 +4,9 @@ import express from 'express';
 
 import UserComponent from '../components/UserComponent.js';
 import ChatComponent from '../components/ChatComponent.js';
-import AdminComponent from '../components/AdminComponent.js';
 
 let userComponent = new UserComponent()
 let chatComponent = new ChatComponent()
-let adminComponent = new AdminComponent();
 
 const router = express.Router();
 
@@ -23,10 +21,11 @@ router.use((req, res, next) => {
 router.get('/users',userComponent.GetAllUsers);
 router.post('/user/Create',userComponent.CreateUser);
 router.post("/user/Login",userComponent.Login);
-router.post("/user/CheckToken",userComponent.CheckToken)
 
-router.get('/user/:user_id',userComponent.getUserById);
 router.delete('/user/:user_id',userComponent.DeleteUser);
+router.get('/user/:user_id',userComponent.getUserById);
+router.post('/user/AuthToken/',userComponent.CheckAuthentication);
+
 
 
 router.get('/chats',chatComponent.GetAllChats);
@@ -35,7 +34,6 @@ router.post('/chat/Create',chatComponent.CreateChat);
 router.post('/chat/addUser',chatComponent.addMemberToChat);
 router.post("/chat/addMessage",chatComponent.addMessageToChat);
 
-router.get("/collections/all",adminComponent.GetAllCollection);
 
 
 

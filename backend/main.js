@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from "cors"
 
 
 import base_router from "./src/routes/BaseRouter.js"
@@ -25,10 +26,16 @@ mongoose.connect(MONGODB_URL, {
 
 
 
+
 const app = express();
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(base_router);
+
+app.use('/static', express.static('public'))
+
 
 const port = process.env.PORT
 app.listen(port, () =>

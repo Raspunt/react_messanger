@@ -2,6 +2,7 @@
 html,body {
     margin: 0;
     padding: 0;
+    background-color:  rgb(9, 53, 69);;
 }
 
 #root {
@@ -16,15 +17,23 @@ html,body {
 
 .MainContainer {
     display: flex;
+    flex-direction: column;
+    
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    height:100%;
 }
 
 .LoginBox {
   padding: 10px 10px;
-  width:500px;
+  width:400px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 1rem;
+
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+
 
 }
 
@@ -44,7 +53,7 @@ html,body {
     background-color: #2d43c0;
     border: 0 solid #E5E7EB;
     box-sizing: border-box;
-    color: #000000;
+    color: white;
     display: flex;
     font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size: 1rem;
@@ -119,7 +128,7 @@ html,body {
 
 /* styling of Input */
 .formBox input {
-    color: black;
+    color: white;
     font-size: 0.9rem;
     background-color: transparent;
     width: 100%;
@@ -152,4 +161,17 @@ html,body {
 }
 .login_input:focus ~ .input-border {
     width: 100%;
+}
+
+.footer_bg{
+  width:100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+}
+
+.btn_container{
+  
+  padding: 0;
+  margin: 0;
 }
