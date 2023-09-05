@@ -95,17 +95,8 @@ html,body {
 
 }
 
-.btn_collection li {
-    font-size: 25px;
-    height: 2em;
-    text-align: center;
-    line-height: 2em;
-    font-family: sans-serif;
-    text-transform: capitalize;
-    position: relative;
-    transition: 0.5s;
-    margin: 0.8em;
-
+.btn_collection  {
+   margin: 10px;
 }
 
 .content_box {
@@ -133,13 +124,41 @@ html,body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    
 }
 
 .enter_message input{
-    width:80%;
-    height:30px;
+    width:100%;
+    height:40px;
+}
+.enter_message input{
+    font-size:32px;
 }
 .enter_message img {
     width:50px;
     height:50px;
+}
+
+.messages_box{
+    display: block;
+    margin-top: auto;
+}
+
+.message {
+    background-color: rgb(0, 131, 253);
+    width:300px;
+    border-start-end-radius: 4px;
+    border-end-end-radius: 4px;
+    margin: 10px;
+}
+
+
+
+.message {
+    padding-left:10px;
+}
+
+.message p,h3 {
+    padding:0;
+    margin:5px;
 }

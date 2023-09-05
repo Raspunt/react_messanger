@@ -43,20 +43,18 @@ class UserComponent {
     async CheckAuthentication(req, res) {
 
         try {
-            let user_token = req.body.token;
+            let user_token = req.cookies.token;
             let user_id = jwt.verify(user_token, process.env.PRIVATE_KEY_JWT)["userId"]
 
-            const user = await User.findById(user_id).select("-password").select("-role").select("-_id");
+            const user = await User.findOne({_id:user_id})
 
             if (!user) {
                 return res.status(401).json({
-                    status:false,
                     error: "auntifcation error"
                 });
             }
 
             res.status(200).json({
-                status:true,
                 user:user,
             });
 
@@ -64,12 +62,10 @@ class UserComponent {
 
             if (error instanceof jwt.JsonWebTokenError){
                 return res.status(401).json({
-                    status:false,
-                    error: "auntifcation error X2"
+                    error: "auntifcation error"
                 });
             }else {
                 return res.status(500).json({
-                    status:false,
                     error: "server error"
                 });
             }
@@ -92,13 +88,11 @@ class UserComponent {
         try {
             const formPassword = req.body.password;
             const mail = req.body.email;
-
-
+            
             const user = await User.findOne({ email: new RegExp('^' + mail + '$', "i") });
 
             if (!user) {
                 return res.status(404).json({
-                    status: false,
                     message: "email_not_found"
                 });
             }
@@ -107,7 +101,6 @@ class UserComponent {
 
             if (!result) {
                 return res.status(401).json({
-                    status: false,
                     message: "wrong_password"
                 });
             }
@@ -119,16 +112,14 @@ class UserComponent {
                 process.env.PRIVATE_KEY_JWT,
                 { expiresIn: "24h" }
             );
-
-            res.status(200).json({
-                status: true,
-                message: "successful_login",
-                token: token
+            res.cookie('token', token, {
+                httpOnly: true,
             });
+            res.status(200).json({message: "successful_login",});
+
         } catch (error) {
             console.error(error);
             res.status(500).json({
-                status: false,
                 message: "error_during_login",
             });
         }

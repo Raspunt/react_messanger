@@ -13,8 +13,6 @@ const router = express.Router();
 router.use((req, res, next) => {
   console.log(`${req.method} ${req.protocol}://${req.hostname}:${req.post}${req.url}`);
   
-  // console.log(req.cookies.token);
-
   next()
 });
 
@@ -29,10 +27,12 @@ router.post('/user/AuthToken/',userComponent.CheckAuthentication);
 
 
 router.get('/chats',chatComponent.GetAllChats);
+router.get("/chat/getMessages",chatComponent.getAllMessages);
 router.get('/chat/:chat_id',chatComponent.getChatById);
 router.post('/chat/Create',chatComponent.CreateChat);
 router.post('/chat/addUser',chatComponent.addMemberToChat);
 router.post("/chat/addMessage",chatComponent.addMessageToChat);
+
 
 
 

@@ -1,14 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
+import http from "http"
+
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from "cors"
 
-
+import SocketMessagesListener  from "./src/socket/SocketMessagesListener.js"
 import base_router from "./src/routes/BaseRouter.js"
-
 
 dotenv.config();
 
@@ -26,10 +27,16 @@ mongoose.connect(MONGODB_URL, {
 
 
 
-
 const app = express();
+const server = http.createServer(app);
 
-app.use(cors());
+SocketMessagesListener(server);
+
+
+app.use(cors({
+	origin: 'http://192.168.1.22:3030',
+	credentials: true
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(base_router);
@@ -38,6 +45,6 @@ app.use('/static', express.static('public'))
 
 
 const port = process.env.PORT
-app.listen(port, () =>
+server.listen(port, () =>
   console.log('Example app listening on port 3000!'),
 );

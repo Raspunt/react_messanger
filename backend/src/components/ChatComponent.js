@@ -7,8 +7,8 @@ import Message from "../models/Message.js";
 class ChatComponent {
     async GetAllChats(req, res) {
         try {
-            const chats = await Chat.find();
-            res.json(chats);
+            const chats = await Chat.find().select("-messages");
+            res.status(200).json(chats);
         } catch (error) {
             res.status(500).json({ error: 'Error fetching chats' });
         }
@@ -53,13 +53,37 @@ class ChatComponent {
             res.status(500).json({ error: "Internal server error" });
         }
     }
+
+    async getAllMessages(req,res){
+        try{
+            const chat_id = req.query.chat_id;
+
+            const isValidObjectId = mongoose.Types.ObjectId.isValid(chat_id);
+            if (!isValidObjectId) {
+                return res.status(400).json({ error: "Invalid chat ID format" });
+            }
+
+            const chat = await Chat.findById(chat_id);
+            if (!chat) {
+                return res.status(404).json({ error: "Chat not found" });
+            }
+
+            
+            const messagePromises = chat.messages.map(async (message_id) => {
+                const message = await Message.findById(message_id);
+                return message;
+            });
+
+            const messages = await Promise.all(messagePromises);
     
-    //  example input data
-    // {
-    //     "user_id":"",
-    //     "chat_id":"",
-    //     "content":""
-    // }
+            res.status(200).json(messages)
+        }
+        catch (error){
+            console.log(error);
+        }
+    }
+
+
     async addMessageToChat(req,res){
         try{
 
@@ -94,6 +118,7 @@ class ChatComponent {
 
                 const newMessage = new Message({
                     sender: user_id,
+                    username:user.username,
                     content: content,
                 });
 
@@ -102,25 +127,13 @@ class ChatComponent {
 
                 chat.messages.push(newMessage)
                 await chat.save()
-                
-                
-
-                
-
-                
+                 
                 res.status(201).json({ message: "Message added to the chat" });
             
             }else {
                 res.status(400).json(errorMessage);
             }
         
-            
-
-
-
-
-            
-
 
         }catch (error) {
             console.log(error);

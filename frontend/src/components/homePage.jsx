@@ -4,7 +4,6 @@ import { Component } from "react";
 import axios from "axios"
 
 import "../static/homePage.css";
-import send_logo from "../static/img/send_logo.svg"
 
 
 class HomeComponent extends Component {
@@ -15,10 +14,11 @@ class HomeComponent extends Component {
         this.state = {
             is_open_chat: false,
             selected_chat: "",
+            selected_chat_id: "",
             chats: [],
-            chat_users: [],
-            is_aunticated:false,
-            user:{}
+            messages: [],
+            is_aunticated: false,
+            user: "user"
         }
 
         this.openChat = this.openChat.bind(this);
@@ -28,9 +28,8 @@ class HomeComponent extends Component {
 
     componentDidMount() {
         this.getAllChats();
-        // this.getUserInfo();
+        
 
-   
     }
 
     getAllChats() {
@@ -44,46 +43,65 @@ class HomeComponent extends Component {
                     console.log("receving data is not array");
                     return
                 }
-
-                for (let i = 0; i < res.data.length; i++) {
-
-                    _this.setState({
-                        chats: res.data
-                    });
-                }
+                _this.setState({
+                    chats: res.data,
+                });
             })
+
     }
 
-    getUserInfo() {
+    loadMessages(chat_id) {
         const serverUrl = process.env.REACT_APP_SERVER_URL;
-        const token = localStorage.getItem("token")
 
         const _this = this
 
-        axios.post(`${serverUrl}/user/AuthToken/`,{
-            'token':token
-        })
+
+        const data = {
+            "chat_id": chat_id
+        };
+
+
+        axios.get(`${serverUrl}/chat/getMessages`, { params: data })
             .then((res) => {
-                
-                const {user,status} = res.data
-
-                if (!status){
-                    _this.setState({
-                        is_aunticated:false,
-                    })
+                if (!Array.isArray(res.data)) {
+                    console.log("receving data is not array");
+                    return
                 }
-                
+
                 _this.setState({
-                    is_aunticated:true,
-                    user:user,
-                })
-
-
-            })
-            .catch((res) => {
-                // console.log(res);
+                    messages: res.data,
+                });
             })
     }
+
+
+    getUserInfo() {
+        const serverUrl = process.env.REACT_APP_SERVER_URL;
+
+        const _this = this
+
+        axios.post(`${serverUrl}/user/AuthToken/`)
+        
+        .then((res) => {
+
+            const { user, status } = res.data
+
+            if (!status) {
+                _this.setState({
+                    is_aunticated: false,
+                })
+            }
+
+            _this.setState({
+                is_aunticated: true,
+                user: user,
+            })
+
+        })
+        .catch((res) => {
+            // console.log(res);
+        })
+    } 
 
 
 
@@ -94,20 +112,42 @@ class HomeComponent extends Component {
 
         axios.get(`${serverUrl}/chat/${chat_id}`)
             .then((res) => {
-                const { name, users } = res.data;
+                const { name, _id } = res.data;
 
                 this.setState({
                     is_open_chat: true,
                     selected_chat: name,
-                    chat_users: users,
+                    selected_chat_id: _id
 
                 });
             })
             .catch((error) => {
                 console.error("Error fetching chat data:", error);
             });
+
+        this.loadMessages(chat_id)
     }
 
+
+    CreateMessage(props) {
+        if (props.message._id) {
+            
+            return (
+                <div className="">lol</div>
+            )
+
+        } else {
+            
+            return (
+                <div className="message_pos">
+                    <div className="message">
+                        <h3>{props.message.username}</h3>
+                        <p>{props.message.content}</p>
+                    </div>
+                </div>
+            );
+        }
+    }
 
 
 
@@ -137,33 +177,36 @@ class HomeComponent extends Component {
                     <div className="top_header">
                         <input className="search_field" type="text" placeholder="search" />
                         <div className="profile_username">
-                            <h1>kekes</h1>
+                            <h1>{this.props.user.username}</h1>
                         </div>
                     </div>
 
                     <div className="content_box">
+
+
 
                         <div className="chat_name">
 
                             {this.state.is_open_chat &&
                                 <h1>{this.state.selected_chat}</h1>
                             }
-                            <h1>Chat name</h1>
                         </div>
 
                         <div className="messages_box">
-                            
+
+                            {this.state.messages.map(message => (
+                                <this.CreateMessage user={this.state.user._id} message={message} />
+
+
+                            ))}
                         </div>
 
                         <div className="enter_message">
-                            <img src={send_logo} alt="" />
-                            <input type="text" />
+                            <input type="text" placeholder="Message..." />
                         </div>
                     </div>
                 </div>
             </div>
-
-
 
         );
     }
