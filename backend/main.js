@@ -29,12 +29,17 @@ mongoose.connect(MONGODB_URL, {
 
 const app = express();
 const server = http.createServer(app);
+const allow_hosts = [
+  'http://192.168.1.22:3030',
+  "http://localhost:3030",
+]
 
-SocketMessagesListener(server);
+
+SocketMessagesListener(server,allow_hosts);
 
 
 app.use(cors({
-	origin: 'http://192.168.1.22:3030',
+	origin: allow_hosts,
 	credentials: true
 }));
 app.use(bodyParser.json());
@@ -42,6 +47,7 @@ app.use(cookieParser());
 app.use(base_router);
 
 app.use('/static', express.static('public'))
+
 
 
 const port = process.env.PORT

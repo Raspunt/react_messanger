@@ -10,6 +10,7 @@ html,body {
 :root {
     --content_width:80%;
     --leftSidebar_width:20%;
+    --messager_width:80%;
 }
   
 .main_container {
@@ -36,6 +37,8 @@ html,body {
     margin: 0;
     padding: 0;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     max-height: 90%; /* Limit the height */
 }
 
@@ -104,6 +107,7 @@ html,body {
     display: flex;
     justify-content:space-between;
     flex-direction: column;
+    align-items: center;
 }
 
 
@@ -124,6 +128,8 @@ html,body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
+    width:var(--messager_width);
     
 }
 
@@ -142,10 +148,24 @@ html,body {
 .messages_box{
     display: block;
     margin-top: auto;
+    width:var(--messager_width);
+    
 }
 
-.message {
+.message_pos_another{
+    display: flex;
+    justify-content: end
+}
+
+.message_another {
     background-color: rgb(0, 131, 253);
+    width:300px;
+    border-start-end-radius: 4px;
+    border-end-end-radius: 4px;
+    margin: 10px;
+}
+.message_our{
+    background-color: rgb(201, 201, 201);
     width:300px;
     border-start-end-radius: 4px;
     border-end-end-radius: 4px;

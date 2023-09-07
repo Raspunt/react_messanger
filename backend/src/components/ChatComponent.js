@@ -91,7 +91,6 @@ class ChatComponent {
             let errorMessage = [];
 
 
-
             if (!user_id || !chat_id || !content){
                 return res.status(400).json({error:"fields are empty"})
             }
@@ -117,7 +116,8 @@ class ChatComponent {
                 }
 
                 const newMessage = new Message({
-                    sender: user_id,
+                    sender_id: user_id,
+                    chat_id: chat_id,
                     username:user.username,
                     content: content,
                 });

@@ -20,9 +20,8 @@ router.get('/users',userComponent.GetAllUsers);
 router.post('/user/Create',userComponent.CreateUser);
 router.post("/user/Login",userComponent.Login);
 
-router.delete('/user/:user_id',userComponent.DeleteUser);
-router.get('/user/:user_id',userComponent.getUserById);
-router.post('/user/AuthToken/',userComponent.CheckAuthentication);
+router.post('/user/AuthToken',userComponent.CheckAuthentication);
+router.get('/user/Token',userComponent.GetUserByToken);
 
 
 
